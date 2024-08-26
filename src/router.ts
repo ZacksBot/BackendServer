@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { body } from "express-validator";
+import { body, oneOf } from "express-validator";
 import { handleInputsErrors } from "./modules/middleware";
 
 const router = Router();
@@ -12,7 +12,7 @@ router.get("/product", (req, res) => {
 
 router.get("/product/:id", (req, res) => {});
 
-router.post("/product", (req, res) => {});
+router.post("/product", body("name"), handleInputsErrors, (req, res) => {});
 
 router.put(
   "/product/:id",
@@ -31,9 +31,21 @@ router.get("/update", (req, res) => {});
 
 router.get("/update/:id", (req, res) => {});
 
-router.post("/update", (req, res) => {});
+router.post(
+  "/update",
+  body("title").exists(),
+  body("body").exists().isString(),
+  (req, res) => {}
+);
 
-router.put("/update/:id", (req, res) => {});
+router.put(
+  "/update/:id",
+  body("title").optional(),
+  body("body").optional(),
+  body("status").isIn(["IN_PROGRESS", "SHIPPED", "DEPRECATED"]),
+  body("version").optional(),
+  (req, res) => {}
+);
 
 router.delete("/update/:id", (req, res) => {});
 
@@ -45,9 +57,20 @@ router.get("/updatepoint", (req, res) => {});
 
 router.get("/updatepoint/:id", (req, res) => {});
 
-router.post("/updatepoint", (req, res) => {});
+router.post(
+  "/updatepoint",
+  body("name").isString(),
+  body("description").isString(),
+  body("updateID").exists().isString(),
+  (req, res) => {}
+);
 
-router.put("/updatepoint/:id", (req, res) => {});
+router.put(
+  "/updatepoint/:id",
+  body("name").optional().isString(),
+  body("description").optional().isString(),
+  (req, res) => {}
+);
 
 router.delete("/updatepoint/:id", (req, res) => {});
 
