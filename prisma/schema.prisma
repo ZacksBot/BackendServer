@@ -25,9 +25,11 @@ model Product {
   id         String   @id @default(uuid())
   createdAt  DateTime @default(now())
   name       String   @db.VarChar(255)
-  belogstoId String
-  belogsTo   User     @relation(fields: [belogstoId], references: [id])
+  belogsToId String
+  belogsTo   User     @relation(fields: [belogsToId], references: [id])
   updates    Update[]
+
+  @@unique([id, belogsToId])
 }
 
 enum UPDATE_STATUS {
