@@ -12,13 +12,19 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/", (req, res) => {
-  console.log("GET request received");
-  res.status(200).send(res.json({ message: "Hello, world!" }));
+app.get("/", (req, res, next) => {
+  setTimeout(() => {
+    next(new Error("hello"));
+  }, 1);
 });
 
 app.use("/api", protect, router);
 app.post("/user", createNewUser);
 app.post("/signin", loginUser);
+
+app.use((err, req, res, next) => {
+  console.log(err);
+  res.json({ message: `had an error: ${err.message}` });
+});
 
 export default app;
